@@ -7,23 +7,21 @@ namespace Udp_broadcast
 {
 	class Program
 	{
-        static string remoteAddress;
-        static int remotePort;
-        static int localPort;
+		static IPAddress remoteAddress; // хост для отправки данных
+		const int remotePort = 8001; // порт для отправки данных
+		const int localPort = 8001; // локальный порт для прослушивания входящих подключений
+		static string username; 
 
         static void Main(string[] args)
         {
 	        try
 	        {
-		        Console.Write("Введите порт для прослушивания: "); // локальный порт
-		        localPort = Int32.Parse(Console.ReadLine());
-		        Console.Write("Введите удаленный адрес для подключения: ");
-		        remoteAddress = Console.ReadLine(); // адрес, к которому мы подключаемся
-		        Console.Write("Введите порт для подключения: ");
-		        remotePort = Int32.Parse(Console.ReadLine()); // порт, к которому мы подключаемся
+		        Console.Write("Введите свое имя:");
+		        username = Console.ReadLine();
+		        remoteAddress = IPAddress.Parse("235.5.5.11");
 		        Thread receiveThread = new Thread(new ThreadStart(ReceiveMessage));
 		        receiveThread.Start();
-		        SendMessage();
+		        SendMessage(); // отправляем сообщение
 	        }
 	        catch(Exception e)
 	        {
@@ -34,13 +32,15 @@ namespace Udp_broadcast
         private static void SendMessage()
         {
 	        UdpClient sender = new UdpClient();
+	        IPEndPoint endPoint = new IPEndPoint(remoteAddress, remotePort);
 	        try
 	        {
 		        while (true)
 		        {
-			        string msg = Console.ReadLine();
-			        byte[] data = Encoding.Unicode.GetBytes(msg);
-			        sender.Send(data, data.Length, remoteAddress, remotePort);
+			        string message = Console.ReadLine(); // сообщение для отправки
+			        message = String.Format("{0}: {1}", username, message);
+			        byte[] data = Encoding.Unicode.GetBytes(message);
+			        sender.Send(data, data.Length, endPoint); // отправка
 		        }
 	        }
 	        catch (Exception e)
@@ -55,21 +55,43 @@ namespace Udp_broadcast
 
         private static void ReceiveMessage()
         {
-	        UdpClient reciver = new UdpClient(localPort);
+	        UdpClient receiver = new UdpClient(localPort); // UdpClient для получения данных
+	        receiver.JoinMulticastGroup(remoteAddress, 20);
 	        IPEndPoint remoteIp = null;
+	        string localAddress = LocalIPAddress();
 	        try
 	        {
 		        while (true)
 		        {
-			        byte[] data = reciver.Receive(ref remoteIp);
-			        string msg = Encoding.Unicode.GetString(data);
-			        Console.WriteLine("Собеседник: {0}", msg);
+			        byte[] data = receiver.Receive(ref remoteIp); // получаем данные
+			        if (remoteIp.Address.ToString().Equals(localAddress))
+				        continue;
+			        string message = Encoding.Unicode.GetString(data);
+			        Console.WriteLine(message);
 		        }
 	        }
-	        catch (Exception e)
+	        catch (Exception ex)
 	        {
-		        Console.WriteLine(e.Message);
+		        Console.WriteLine(ex.Message);
 	        }
+	        finally
+	        {
+		        receiver.Close();
+	        }
+        }
+        private static string LocalIPAddress()
+        {
+	        string localIP = "";
+	        IPHostEntry  host = Dns.GetHostEntry(Dns.GetHostName());
+	        foreach (IPAddress ip in host.AddressList)
+	        {
+		        if (ip.AddressFamily == AddressFamily.InterNetwork)
+		        {
+			        localIP = ip.ToString();
+			        break;
+		        }
+	        }
+	        return localIP;
         }
 	}
 }
