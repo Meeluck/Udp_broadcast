@@ -23,6 +23,10 @@ namespace Udp_broadcast
 				IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
 				localIp = host.AddressList.Last().ToString();
 
+				
+
+				Thread receiveThread = new Thread(new ThreadStart(ReceiveMessage));
+				receiveThread.Start();
 				UdpClient sender = new UdpClient();
 				IPEndPoint endPoint = new IPEndPoint(remoteAddress, remotePort);
 				string msg = "Вас приветсвует " + localIp;
@@ -30,9 +34,6 @@ namespace Udp_broadcast
 				sender.Send(data, data.Length, endPoint);
 				sender.Close();
 
-				Thread receiveThread = new Thread(new ThreadStart(ReceiveMessage));
-
-				receiveThread.Start();
 				SendMessage(); // отправляем сообщение
 			}
 			catch (Exception e)
