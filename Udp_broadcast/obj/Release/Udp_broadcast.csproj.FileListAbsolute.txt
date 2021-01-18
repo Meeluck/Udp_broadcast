@@ -1,0 +1,6 @@
+D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\bin\Release\Udp_broadcast.exe.config
+D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\bin\Release\Udp_broadcast.exe
+D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\bin\Release\Udp_broadcast.pdb
+D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\obj\Release\Udp_broadcast.csproj.CoreCompileInputs.cache
+D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\obj\Release\Udp_broadcast.exe
+D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\obj\Release\Udp_broadcast.pdb
