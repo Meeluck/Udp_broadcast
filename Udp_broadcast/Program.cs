@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Udp_broadcast
 		const int remotePort = 8001; // порт для отправки данных
 		const int localPort = 8001; // локальный порт для прослушивания входящих подключений
 		static string username;
-
+		static string localIp;
 		static void Main(string[] args)
 		{
 			try
@@ -19,7 +20,18 @@ namespace Udp_broadcast
 				Console.Write("Введите свое имя:");
 				username = Console.ReadLine();
 				remoteAddress = IPAddress.Parse("235.5.5.11");
+				IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+				localIp = host.AddressList.Last().ToString();
+
+				UdpClient sender = new UdpClient();
+				IPEndPoint endPoint = new IPEndPoint(remoteAddress, remotePort);
+				string msg = "Вас приветсвует " + localIp;
+				byte[] data = Encoding.Unicode.GetBytes(msg);
+				sender.Send(data, data.Length, endPoint);
+				sender.Close();
+
 				Thread receiveThread = new Thread(new ThreadStart(ReceiveMessage));
+
 				receiveThread.Start();
 				SendMessage(); // отправляем сообщение
 			}
@@ -59,13 +71,12 @@ namespace Udp_broadcast
 			UdpClient receiver = new UdpClient(localPort);
 			receiver.JoinMulticastGroup(remoteAddress, 20);
 			IPEndPoint remoteIp = null;
-			string localAddress = LocalIPAddress();
 			try
 			{
 				while (true)
 				{
 					byte[] data = receiver.Receive(ref remoteIp); // получаем данные
-					if (remoteIp.Address.ToString().Equals(localAddress))
+					if (remoteIp.Address.ToString().Equals(localIp))
 						continue;
 					string message = Encoding.Unicode.GetString(data);
 					Console.WriteLine(message);
@@ -77,20 +88,7 @@ namespace Udp_broadcast
 				throw;
 			}
 		}
-		private static string LocalIPAddress()
-		{
-			string localIp = "";
-			IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-			foreach (IPAddress ip in host.AddressList)
-			{
-				if (ip.AddressFamily == AddressFamily.InterNetwork)
-				{
-					localIp = ip.ToString();
-					break;
-				}
-			}
-			return localIp;
-		}
+
 	}
 }
 
