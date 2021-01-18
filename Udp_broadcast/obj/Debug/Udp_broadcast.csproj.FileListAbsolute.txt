@@ -1,7 +1,0 @@
-D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\obj\Debug\Udp_broadcast.csprojAssemblyReference.cache
-D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\obj\Debug\Udp_broadcast.csproj.CoreCompileInputs.cache
-D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\bin\Debug\Udp_broadcast.exe.config
-D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\bin\Debug\Udp_broadcast.exe
-D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\bin\Debug\Udp_broadcast.pdb
-D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\obj\Debug\Udp_broadcast.exe
-D:\Study\7 семестр\Защита информации\Лабораторные работы\Udp_broadcast\Udp_broadcast\obj\Debug\Udp_broadcast.pdb
